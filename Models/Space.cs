@@ -109,7 +109,12 @@ namespace SpazioServer.Models
             return numEffected;
 
         }
-
+        
+            public List<Space> getSpacesBySearch(string field,string city, string street,string number)
+        {
+            DBServices dbs = new DBServices();
+            return dbs.readSpacesBySearch(field,city,street,number);
+        }
 
     }
 }

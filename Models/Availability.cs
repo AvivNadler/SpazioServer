@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 
 namespace SpazioServer.Models
@@ -54,5 +55,10 @@ namespace SpazioServer.Models
             int numAffected = dbs.insert(this);
             return numAffected;
         }
+
+        //internal IEnumerable<ParameterInfo> GetParameters()
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

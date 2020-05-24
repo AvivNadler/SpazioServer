@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Spazio</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="../scripts/ajaxCalls.js"></script>
+
+    <script>
+
+        var field = "Sport";
+        var city= "Kfar Yona";
+        var street = "";
+        var number="";
+
+
+        var querystring= "field=" + field + "&city=" + city + "&street=" + street + "&number=" + number;
+              //  ajaxCall("GET", "../api/space/?" + querystring, "", getSuccessCB, getErrorCB);
+
+                      //  ajaxCall("GET", "../api/space/?" + querystring, "", getSuccessCB, getErrorCB);
+
+             var order = {
+    "EndHour": "20:00",
+    "OrderDate": "4/17/2020 3:34:00 PM",
+    "OrderId": "",
+    "Price": "110",
+    "ReservationDate": "01/05/2020",
+    "SpaceId": "6",
+    "StartHour": "19:00",
+    "UserId": "4"
+};
+                       ajaxCall("POST", "../api/order", JSON.stringify(order), getSuccessCB, getErrorCB);
+
+        var spaceid = 6;
+        var date = "20/05/2020";
+        var querystring2 = "spaceid=" + spaceid + "&date=" + date;
+
+                
+        
+        var querystring3= "field=" + field + "&city=" + city + "&street=" + street + "&number=" + number + "&date=" + date;
+
+                var emptyquerystring3= "field=&city=&street=&number=&date=" + date;
+
+        var userId = 4;
+
+        var querystringFavourite = "userId=" + userId;
+
+        var userEmail = "giladzim1@gmail.com";
+
+        var querystringMySpaces = "userEmail=" + userEmail;
+
+        var spaces= [6,7,8];
+
+
+
+        var spaceid = "spaceid=6";
+
+
+                               //ajaxCall("GET", "../api/RealAvailability/?" + querystring2, "", getSuccessCB, getErrorCB);
+
+
+                                       //ajaxCall("GET", "../api/SpaceData/?" + emptyquerystring3, "", getSuccessCB, getErrorCB);
+
+         //ajaxCall("GET", "../api/SpaceData/?" + querystringFavourite, "", getSuccessCB, getErrorCB);
+
+                 //ajaxCall("GET", "../api/SpaceData/?" + querystringMySpaces, "", getSuccessCB, getErrorCB);
+
+                         //ajaxCall("GET", "../api/order/?spaceid=6" , "", getSuccessCB, getErrorCB);
+
+
+
+
+        function getSuccessCB(data) {
+            console.log(data);
+
+        }
+
+         function getErrorCB(error) {
+            console.log(error);
+
+        }
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>
