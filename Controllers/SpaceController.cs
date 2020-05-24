@@ -17,6 +17,13 @@ namespace SpazioServer.Controllers
             return s.getSpaces();
         }
 
+        [HttpGet]
+        public List<Space> GetBySearch(string field, string city, string street, string number)
+        {
+            Space s = new Space();
+            return s.getSpacesBySearch(field, city, street, number);
+        }
+
         // GET api/<controller>/5
 
         public string Get(int id)

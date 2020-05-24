@@ -163,6 +163,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AvailabilityController.cs" />
+    <Compile Include="Controllers\CountriesController.cs" />
     <Compile Include="Controllers\EquipmentController.cs" />
     <Compile Include="Controllers\FacilitiesController.cs" />
     <Compile Include="Controllers\FavouriteController.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="Controllers\FileUploadController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\RealAvailabilityController.cs" />
     <Compile Include="Controllers\SpaceController.cs" />
     <Compile Include="Controllers\SpaceDataController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -179,15 +181,19 @@
     </Compile>
     <Compile Include="Models\Admin.cs" />
     <Compile Include="Models\Availability.cs" />
+    <Compile Include="Models\Country.cs" />
     <Compile Include="Models\DAL\DBServices.cs" />
     <Compile Include="Models\Equipment.cs" />
     <Compile Include="Models\Facility.cs" />
     <Compile Include="Models\Favourite.cs" />
     <Compile Include="Models\FieldEq.cs" />
     <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderData.cs" />
+    <Compile Include="Models\RealAvailability.cs" />
     <Compile Include="Models\Space.cs" />
     <Compile Include="Models\SpaceData.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\WeekAvailability.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -199,8 +205,11 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="pages\Countries.html" />
     <Content Include="pages\index.html" />
+    <Content Include="pages\index2.html" />
     <Content Include="pages\OrdersTable.html" />
+    <Content Include="pages\test.html" />
     <Content Include="pages\UsersTable.html" />
     <Content Include="pages\UserTable.js" />
     <Content Include="Scripts\ajaxCalls.js" />

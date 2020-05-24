@@ -7,7 +7,8 @@ using System.Web.Configuration;
 using System.Data;
 using System.Text;
 using SpazioServer.Models;
-
+using System.Globalization;
+using System.Reflection;
 
 
 public class DBServices
@@ -135,7 +136,7 @@ public class DBServices
         }
         try
         {
-            string selectSTR = "SELECT * FROM Users_2020 Where Id=" + id;
+            string selectSTR = "SELECT * FROM Users_2020 Where Id=" + id.ToString();
             SqlCommand cmd = new SqlCommand(selectSTR, con);
             SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
             while (dr.Read())
@@ -491,6 +492,214 @@ public class DBServices
         try
         {
             string selectSTR = "SELECT * FROM Spaces_2020";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dr.Read())
+            {   // Read till the end of the data into a row
+                Space s = new Space();
+
+                s.Id = Convert.ToInt32(dr["SpaceId"]);
+                s.Name = (string)dr["SpaceName"];
+                s.Field = (string)dr["Field"];
+                s.Price = Convert.ToDouble(dr["Price"]);
+                s.City = (string)dr["City"];
+                s.Street = (string)dr["Street"];
+                s.Number = (string)dr["Number"];
+                s.Capabillity = Convert.ToInt32(dr["Capabillity"]);
+                s.Bank = (string)dr["Bank"];
+                s.Branch = (string)dr["Branch"];
+                s.AccountNumber = (string)dr["AccountNumber"];
+                s.Imageurl1 = (string)dr["Image1"];
+                s.Imageurl2 = (string)dr["Image2"];
+                s.Imageurl3 = (string)dr["Image3"];
+                s.Imageurl4 = (string)dr["Image4"];
+                s.Imageurl5 = (string)dr["Image5"];
+                s.UserEmail = (string)dr["FKEmail"];
+                s.Description = (string)dr["Description"];
+                s.TermsOfUse = (string)dr["TermsOfUse"];
+                s.Rank = Convert.ToDouble(dr["Rank"]);
+                s.Uploadtime = dr["UploadDate"].ToString();
+
+                Spaces.Add(s);
+            }
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+        return Spaces;
+    }
+    public List<Space> readMySpaces(string userEmail)
+    {
+        List<Space> Spaces = new List<Space>();
+        SqlConnection con = null;
+        try
+        {
+            con = connect("database");
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        try
+        {
+            string selectSTR = "SELECT * FROM Spaces_2020 Where FKEmail='" + userEmail + "'";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dr.Read())
+            {   // Read till the end of the data into a row
+                Space s = new Space();
+
+                s.Id = Convert.ToInt32(dr["SpaceId"]);
+                s.Name = (string)dr["SpaceName"];
+                s.Field = (string)dr["Field"];
+                s.Price = Convert.ToDouble(dr["Price"]);
+                s.City = (string)dr["City"];
+                s.Street = (string)dr["Street"];
+                s.Number = (string)dr["Number"];
+                s.Capabillity = Convert.ToInt32(dr["Capabillity"]);
+                s.Bank = (string)dr["Bank"];
+                s.Branch = (string)dr["Branch"];
+                s.AccountNumber = (string)dr["AccountNumber"];
+                s.Imageurl1 = (string)dr["Image1"];
+                s.Imageurl2 = (string)dr["Image2"];
+                s.Imageurl3 = (string)dr["Image3"];
+                s.Imageurl4 = (string)dr["Image4"];
+                s.Imageurl5 = (string)dr["Image5"];
+                s.UserEmail = (string)dr["FKEmail"];
+                s.Description = (string)dr["Description"];
+                s.TermsOfUse = (string)dr["TermsOfUse"];
+                s.Rank = Convert.ToDouble(dr["Rank"]);
+                s.Uploadtime = dr["UploadDate"].ToString();
+
+                Spaces.Add(s);
+            }
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+        return Spaces;
+    }
+
+    private string isEmpty(string field)
+    {
+        string temp = field;
+        if (temp == "" || temp == null)
+            temp = "_%";
+        return temp;
+    }
+
+    public Space readSpaceById(int id)
+    {
+
+        Space s = new Space();
+        SqlConnection con = null;
+        try
+        {
+            con = connect("database");
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        try
+        {
+            StringBuilder sb = new StringBuilder();
+            // use a string builder to create the dynamic string
+            string command;
+            sb.AppendFormat("WHERE SpaceId={0}", id.ToString());
+            String prefix = "SELECT * FROM Spaces_2020 ";
+            command = prefix + sb.ToString();
+
+            string selectSTR = command;
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dr.Read())
+            {   // Read till the end of the data into a row
+                
+
+                s.Id = Convert.ToInt32(dr["SpaceId"]);
+                s.Name = (string)dr["SpaceName"];
+                s.Field = (string)dr["Field"];
+                s.Price = Convert.ToDouble(dr["Price"]);
+                s.City = (string)dr["City"];
+                s.Street = (string)dr["Street"];
+                s.Number = (string)dr["Number"];
+                s.Capabillity = Convert.ToInt32(dr["Capabillity"]);
+                s.Bank = (string)dr["Bank"];
+                s.Branch = (string)dr["Branch"];
+                s.AccountNumber = (string)dr["AccountNumber"];
+                s.Imageurl1 = (string)dr["Image1"];
+                s.Imageurl2 = (string)dr["Image2"];
+                s.Imageurl3 = (string)dr["Image3"];
+                s.Imageurl4 = (string)dr["Image4"];
+                s.Imageurl5 = (string)dr["Image5"];
+                s.UserEmail = (string)dr["FKEmail"];
+                s.Description = (string)dr["Description"];
+                s.TermsOfUse = (string)dr["TermsOfUse"];
+                s.Rank = Convert.ToDouble(dr["Rank"]);
+                s.Uploadtime = dr["UploadDate"].ToString();
+
+            }
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+        return s;
+    }
+
+    public List<Space> readSpacesBySearch(string field, string city, string street, string number)
+    {
+
+        List<Space> Spaces = new List<Space>();
+        SqlConnection con = null;
+        try
+        {
+            con = connect("database");
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        try
+        {
+            StringBuilder sb = new StringBuilder();
+            // use a string builder to create the dynamic string
+            string command;
+            sb.AppendFormat("WHERE Field like '{0}' and City like '{1}' and  Street like '{2}'  and  Number like '{3}' Order by Rank DESC, SpaceName ASC", isEmpty(field), isEmpty(city), isEmpty(street), isEmpty(number));
+            String prefix = "SELECT * FROM Spaces_2020 ";
+            command = prefix + sb.ToString();
+
+            string selectSTR = command;
             SqlCommand cmd = new SqlCommand(selectSTR, con);
             SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
             while (dr.Read())
@@ -962,6 +1171,48 @@ public class DBServices
         }
         return Equipments;
     }
+    public List<Equipment> readEquipments(int spaceId)
+    {
+        List<Equipment> Equipments = new List<Equipment>();
+        SqlConnection con = null;
+        try
+        {
+            con = connect("database");
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        try
+        {
+            string selectSTR = "SELECT * FROM Equipment_2020 Where FKSpaceId=" + spaceId.ToString();
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dr.Read())
+            {   // Read till the end of the data into a row
+                Equipment eq = new Equipment();
+
+                eq.Id = Convert.ToInt32(dr["EquipmentId"]);
+                eq.Name = (string)dr["EquipmentName"];
+                eq.SpaceId = Convert.ToInt32(dr["FKSpaceId"]);
+                Equipments.Add(eq);
+            }
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+        return Equipments;
+    }
 
     //--------------------------------------------------------------------------------------------------
     //                    ****** This section include the Facility functions ******
@@ -1066,6 +1317,54 @@ public class DBServices
         }
         return Facilities;
     }
+    public Facility readFacilities(int spaceId)
+    {
+        SqlConnection con = null;
+        Facility f = new Facility();
+
+        try
+        {
+            con = connect("database");
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        try
+        {
+            string selectSTR = "SELECT * FROM Facilities_2020 where FKSpaceId=" + spaceId.ToString();
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dr.Read())
+            {   // Read till the end of the data into a row
+
+                f.Id = Convert.ToInt32(dr["FacilityId"]);
+                f.Parking = Convert.ToBoolean(dr["Parking"]);
+                f.Toilet = Convert.ToBoolean(dr["Toilet"]);
+                f.Kitchen = Convert.ToBoolean(dr["Kitchen"]);
+                f.Intercom = Convert.ToBoolean(dr["Intercom"]);
+                f.Accessible = Convert.ToBoolean(dr["Accessible"]);
+                f.AirCondition = Convert.ToBoolean(dr["AirCondition"]);
+                f.Wifi = Convert.ToBoolean(dr["WiFi"]);
+                f.SpaceId = Convert.ToInt32(dr["FKSpaceId"]);
+
+            }
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+        return f;
+    }
 
     //--------------------------------------------------------------------------------------------------
     //                    ****** This section include the Availability functions ******
@@ -1113,7 +1412,7 @@ public class DBServices
         StringBuilder sb = new StringBuilder();
         // use a string builder to create the dynamic string
         sb.AppendFormat("Values('{0}', '{1}','{2}', '{3}','{4}', '{5}','{6}', '{7}')", a.Sunday, a.Monday, a.Tuesday, a.Wednesday, a.Thursday, a.Friday, a.Saturday, a.SpaceId);
-        String prefix = "INSERT INTO Availability_2020" + "(Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday, FKSpaceId)";
+        String prefix = "INSERT INTO Availability_2020" + "(Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday, FK_SpaceId)";
         command = prefix + sb.ToString();
 
         return command;
@@ -1148,7 +1447,7 @@ public class DBServices
                 a.Thursday = (string)dr["Thursday"];
                 a.Friday = (string)dr["Friday"];
                 a.Saturday = (string)dr["Saturday"];
-                a.SpaceId = Convert.ToInt32(dr["FKSpaceId"]);
+                a.SpaceId = Convert.ToInt32(dr["FK_SpaceId"]);
 
                 Availabilities.Add(a);
             }
@@ -1168,6 +1467,56 @@ public class DBServices
         }
         return Availabilities;
     }
+
+    public Availability readAvailability(int id)
+    {
+        Availability a = new Availability();
+        SqlConnection con = null;
+        try
+        {
+            con = connect("database");
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        try
+        {
+            string selectSTR = "SELECT * FROM Availability_2020 Where FK_SpaceId='" + id + "'";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dr.Read())
+            {   // Read till the end of the data into a row
+
+                a.Id = Convert.ToInt32(dr["AvailabilityId"]);
+                a.Sunday = (string)dr["Sunday"];
+                a.Monday = (string)dr["Monday"];
+                a.Tuesday = (string)dr["Tuesday"];
+                a.Wednesday = (string)dr["Wednesday"];
+                a.Thursday = (string)dr["Thursday"];
+                a.Friday = (string)dr["Friday"];
+                a.Saturday = (string)dr["Saturday"];
+                a.SpaceId = Convert.ToInt32(dr["FK_SpaceId"]);
+
+            }
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+        return a;
+    }
+
+
 
     //--------------------------------------------------------------------------------------------------
     //                    ****** This section include the Fields by Equipment functions ******
@@ -1409,6 +1758,7 @@ public class DBServices
         DateTime time = DateTime.Now;
         // string timeInString = DateTime.Now.ToString("YYYY-MM-DD hh:mm:ss");
 
+
         // use a string builder to create the dynamic string
         sb.AppendFormat("Values({0}, {1},'{2}','{3}','{4}','{5}', {6})", order.SpaceId.ToString(), order.UserId.ToString(), order.ReservationDate, order.StartHour, order.EndHour, time.ToString(format), order.Price);
         String prefix = "INSERT INTO Orders_2020 " + "(SpaceId, UserId, ReservationDate, StartHour, EndHour, OrderDate, Price) ";
@@ -1435,7 +1785,7 @@ public class DBServices
             throw (ex);
         }
 
-        String cStr = BuildInsertCommand(order);      // helper method to build the insert string
+        String cStr = BuildInsertCommand2(order);      // helper method to build the insert string
 
         cmd = CreateCommand(cStr, con);             // create the command
 
@@ -1488,9 +1838,61 @@ public class DBServices
                 o.OrderId = Convert.ToInt32(dr["OrderId"]);
                 o.SpaceId = Convert.ToInt32(dr["SpaceId"]);
                 o.UserId = Convert.ToInt32(dr["UserId"]);
-                o.ReservationDate = (string)dr["ReservationDate"];
+                string temp = dr["ReservationDate"].ToString();
+                o.ReservationDate = temp.Split(' ')[0];
                 o.StartHour = (string)dr["StartHour"];
                 o.EndHour = (string)dr["EndHour"];
+                o.Price = Convert.ToDouble(dr["Price"]);
+                o.OrderDate = dr["OrderDate"].ToString();
+
+
+                orders.Add(o);
+            }
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+        return orders;
+    }
+
+    public List<Order> readOrdersOfSpace(int spaceId)
+    {
+        List<Order> orders = new List<Order>();
+        SqlConnection con = null;
+        try
+        {
+            con = connect("database");
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        try
+        {
+            string selectSTR = "SELECT * FROM Orders_2020 where SpaceId=" + spaceId.ToString();
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dr.Read())
+            {   // Read till the end of the data into a row
+                Order o = new Order();
+
+                o.OrderId = Convert.ToInt32(dr["OrderId"]);
+                o.SpaceId = Convert.ToInt32(dr["SpaceId"]);
+                o.UserId = Convert.ToInt32(dr["UserId"]);
+                string temp = dr["ReservationDate"].ToString();
+                o.ReservationDate = temp.Split(' ')[0];
+                o.StartHour = dr["StartHour"].ToString();
+                o.EndHour = dr["EndHour"].ToString();
                 o.Price = Convert.ToDouble(dr["Price"]);
                 o.OrderDate = dr["OrderDate"].ToString();
 
@@ -1537,7 +1939,8 @@ public class DBServices
                 o.OrderId = Convert.ToInt32(dr["OrderId"]);
                 o.SpaceId = Convert.ToInt32(dr["SpaceId"]);
                 o.UserId = Convert.ToInt32(dr["UserId"]);
-                o.ReservationDate = (string)dr["ReservationDate"];
+                string temp = dr["ReservationDate"].ToString();
+                o.ReservationDate = temp.Split(' ')[0];
                 o.StartHour = (string)dr["StartHour"];
                 o.EndHour = (string)dr["EndHour"];
                 o.Price = Convert.ToDouble(dr["Price"]);
@@ -1560,6 +1963,1067 @@ public class DBServices
         }
         return o;
     }
+    public List<OrderData> readOrdersDataBySpaceId(int spaceid)
+    {
+        List<OrderData> orders = new List<OrderData>();
+        SqlConnection con = null;
+        try
+        {
+            con = connect("database");
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        try
+        {
+            string selectSTR = "SELECT * FROM Orders_2020 Where SpaceId=" + spaceid.ToString() ;
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dr.Read())
+            {   // Read till the end of the data into a row
+                Order o = new Order();
+                OrderData od = new OrderData();
 
+                o.OrderId = Convert.ToInt32(dr["OrderId"]);
+                o.SpaceId = Convert.ToInt32(dr["SpaceId"]);
+                o.UserId = Convert.ToInt32(dr["UserId"]);
+                string temp = dr["ReservationDate"].ToString();
+                o.ReservationDate = temp.Split(' ')[0];
+                o.StartHour = (string)dr["StartHour"];
+                o.EndHour = (string)dr["EndHour"];
+                o.Price = Convert.ToDouble(dr["Price"]);
+                o.OrderDate = dr["OrderDate"].ToString();
+
+                od.Order = o;
+
+                od.User = this.readUser(o.UserId);
+
+                
+
+                orders.Add(od);
+            }
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+        return orders;
+    }
+
+
+
+    private String BuildInsertCommand2(Order order)
+    {
+        String command;
+
+        StringBuilder sb = new StringBuilder();
+        string format = "yyyy-MM-dd HH:mm:ss";
+        string format2 = "yyyy-MM-dd";
+        DateTime time = DateTime.Now;
+        DateTime reservation = new DateTime(Convert.ToInt32(order.ReservationDate.Split('/')[2]), Convert.ToInt32(order.ReservationDate.Split('/')[1]), Convert.ToInt32(order.ReservationDate.Split('/')[0]));
+        // string timeInString = DateTime.Now.ToString("YYYY-MM-DD hh:mm:ss");
+
+
+        // use a string builder to create the dynamic string
+        sb.AppendFormat("Values({0}, {1},'{2}','{3}','{4}','{5}', {6})", order.SpaceId.ToString(), order.UserId.ToString(), reservation.ToString(format2), order.StartHour, order.EndHour, time.ToString(format), order.Price);
+        String prefix = "INSERT INTO Orders_2020 " + "(SpaceId, UserId, ReservationDate, StartHour, EndHour, OrderDate, Price) ";
+        command = prefix + sb.ToString();
+
+
+
+        //to get the number of week (week starts on monday)
+        CultureInfo myCI = new CultureInfo("en-US");
+        DateTimeFormatInfo dfi = DateTimeFormatInfo.CurrentInfo;
+        Calendar cal = dfi.Calendar;
+
+
+        RealAvailability ra = new RealAvailability(0,reservation.Year,cal.GetWeekOfYear(reservation,dfi.CalendarWeekRule,dfi.FirstDayOfWeek), reservation.DayOfWeek.ToString(), order.ReservationDate,reservation,"00","00",order.SpaceId);
+        RealAvailability ra2 = new RealAvailability(0, reservation.Year, cal.GetWeekOfYear(reservation, dfi.CalendarWeekRule, dfi.FirstDayOfWeek), reservation.DayOfWeek.ToString(), order.ReservationDate, reservation, "00", "00", order.SpaceId);
+
+        Availability a = readAvailability(order.SpaceId);
+
+        List<RealAvailability> availabilityList = readRealAvailbility(order.SpaceId, reservation.ToString(format2));
+
+
+        List<string> reala = new List<string>();
+
+        List<string> reala2 = new List<string>();
+
+        //RealAvailability newra = ra;
+        //RealAvailability newra2 = ra2;
+
+        List<WeekAvailability> list = readWeekAvailbility(order.SpaceId, reservation.DayOfWeek.ToString());
+
+        
+        
+            int index = 0;
+            bool isBetween = false;
+
+        foreach (WeekAvailability item in list)
+        {
+            DateTime startdateweek = new DateTime(reservation.Year, reservation.Month, reservation.Day, Int32.Parse(item.StartTime.Split(':')[0]), Int32.Parse(item.StartTime.Split(':')[1]), 0);
+            DateTime enddateweek = new DateTime(reservation.Year, reservation.Month, reservation.Day, Int32.Parse(item.EndTime.Split(':')[0]), Int32.Parse(item.EndTime.Split(':')[1]), 0);
+            isBetween = false;
+            foreach (RealAvailability item2 in availabilityList)
+            {
+                DateTime startdatereal = new DateTime(reservation.Year, reservation.Month, reservation.Day, Int32.Parse(item2.StartTime.Split(':')[0]), Int32.Parse(item2.StartTime.Split(':')[1]), 0);
+                DateTime enddatereal = new DateTime(reservation.Year, reservation.Month, reservation.Day, Int32.Parse(item2.EndTime.Split(':')[0]), Int32.Parse(item2.EndTime.Split(':')[1]), 0);
+                if (startdatereal >= startdateweek && enddatereal <= enddateweek)
+                {
+                    isBetween = true;
+                }
+            }
+            if (isBetween == false && compareTimes(item.StartTime, item.EndTime, order).Count != 0)
+            {
+                reala = compareTimes(item.StartTime, item.EndTime, order);
+
+                if (reala.Count == 1 )
+                {
+                    RealAvailability newra = new RealAvailability(0, reservation.Year, cal.GetWeekOfYear(reservation, dfi.CalendarWeekRule, dfi.FirstDayOfWeek), reservation.DayOfWeek.ToString(), order.ReservationDate, reservation, reala[0].Split('-')[0], reala[0].Split('-')[1], order.SpaceId);
+                    
+                        insert(newra);
+                }
+                else if (reala.Count == 2)
+                {
+                    //newra insert all the details expect start ite and endtime
+                    //newra2.StartTime = reala[1].Split('-')[0];
+                    //newra2.EndTime = reala[1].Split('-')[1];
+                    RealAvailability newra = new RealAvailability(0, reservation.Year, cal.GetWeekOfYear(reservation, dfi.CalendarWeekRule, dfi.FirstDayOfWeek), reservation.DayOfWeek.ToString(), order.ReservationDate, reservation, reala[0].Split('-')[0], reala[0].Split('-')[1], order.SpaceId);
+
+                    insert(newra);
+                    RealAvailability newra2 = new RealAvailability(0, reservation.Year, cal.GetWeekOfYear(reservation, dfi.CalendarWeekRule, dfi.FirstDayOfWeek), reservation.DayOfWeek.ToString(), order.ReservationDate, reservation, reala[1].Split('-')[0], reala[1].Split('-')[1], order.SpaceId);
+
+                    insert(newra2);
+                }
+            }
+        }
+            
+
+
+            foreach (RealAvailability item3 in availabilityList)
+            {
+                 
+
+                if (compareTimes(item3.StartTime, item3.EndTime, order).Count != 0 )
+                {
+                    reala2 = compareTimes(item3.StartTime, item3.EndTime, order);
+                    index = item3.Id;
+
+                    if (reala2.Count == 1)
+                    {
+
+                        RealAvailability newra = new RealAvailability(index, reservation.Year, cal.GetWeekOfYear(reservation, dfi.CalendarWeekRule, dfi.FirstDayOfWeek), reservation.DayOfWeek.ToString(), order.ReservationDate, reservation, reala2[0].Split('-')[0], reala2[0].Split('-')[1], order.SpaceId);
+                        if (newra.StartTime == newra.EndTime )
+                        {
+                            DeleteAvailability(newra);
+                        }
+                        else
+                        {
+                            UpdateAvailability(newra);
+                        }
+
+                    }
+                    // or insert and update the times of the change ra ??
+                    else if (reala2.Count == 2)
+                    {
+                        //newra insert all the details expect start ite and endtime
+                        //newra2.StartTime = reala[1].Split('-')[0];
+                        //newra2.EndTime = reala[1].Split('-')[1];
+                        RealAvailability newra = new RealAvailability(index, reservation.Year, cal.GetWeekOfYear(reservation, dfi.CalendarWeekRule, dfi.FirstDayOfWeek), reservation.DayOfWeek.ToString(), order.ReservationDate, reservation, reala2[0].Split('-')[0], reala2[0].Split('-')[1], order.SpaceId);
+
+                        UpdateAvailability(newra);
+
+                        RealAvailability newra2 = new RealAvailability(0, reservation.Year, cal.GetWeekOfYear(reservation, dfi.CalendarWeekRule, dfi.FirstDayOfWeek), reservation.DayOfWeek.ToString(), order.ReservationDate, reservation, reala2[1].Split('-')[0], reala2[1].Split('-')[1], order.SpaceId);
+
+                        insert(newra2);
+
+                    }
+                }
+
+            }
+            //newra insert all the details expect start ite and endtime
+            //newra.StartTime = reala[0].Split('-')[0];
+            //newra.EndTime = reala[0].Split('-')[1];
+          
+        
+
+        
+
+
+        //Availability a = readAvailability(order.SpaceId,order.ReservationDate.ToString("dddd"));
+
+
+
+        // DateTime dt = new DateTime(Int32.Parse(order.ReservationDate.Split('/')[2]), Int32.Parse(order.ReservationDate.Split('/')[1]), Int32.Parse(order.ReservationDate.Split('/')[0]));
+        //string wday = dt.ToString("dddd");
+        // Availability a = readAvailability(order.SpaceId);
+
+        // start hour = a.wday.Split('-')[0]  
+        // end hour = a.wday.Split('-')[1] 
+        // checking if space is exsist in real availabilty with the same day of wday
+        // if its exsist calculate the avialable hours
+        // else check if the hours is between one of the real avialabilitis
+        //DateTime.Now.ToString("HH:mm")	
+        //DateTime dateTime = DateTime.ParseExact(time, "HH:mm:ss",
+        //                                         CultureInfo.InvariantCulture);
+       
+
+
+        return command;
+    }
+
+
+    private int UpdateAvailability(RealAvailability r)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("database"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        String command;
+
+        StringBuilder sb = new StringBuilder();
+
+        // use a string builder to create the dynamic string
+        sb.AppendFormat("SET [Year]={1}, [WeekNumber]={2}, [Week_Day]='{3}', [StartTime]='{4}', [EndTime]='{5}', [FkSpaceId]={6} WHERE Id={0} ", r.Id.ToString(), r.Year.ToString(), r.WeekNumber.ToString(), r.Day, r.StartTime, r.EndTime, r.FkSpaceId.ToString());
+        String prefix = "UPDATE RealAvailability_2020 ";
+        command = prefix + sb.ToString();
+
+
+        String cStr = command;      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            return 0;
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+    }
+    private int DeleteAvailability(RealAvailability r)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("database"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        String command;
+
+        StringBuilder sb = new StringBuilder();
+
+        // use a string builder to create the dynamic string
+        sb.AppendFormat("WHERE Id={0} ", r.Id.ToString());
+        String prefix = "DELETE FROM RealAvailability_2020 ";
+        command = prefix + sb.ToString();
+
+
+        String cStr = command;      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            return 0;
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+    }
+
+
+    private List<string> compareTimes(string rStart, string rEnd, Order o)
+    {
+        //date send from server in format of dd/mm/yyyy
+        DateTime resdate = new DateTime(Convert.ToInt32(o.ReservationDate.Split('/')[2]), Convert.ToInt32(o.ReservationDate.Split('/')[1]), Convert.ToInt32(o.ReservationDate.Split('/')[0]));
+
+        DateTime orderStart = new DateTime(resdate.Year, resdate.Month, resdate.Day, Int32.Parse(o.StartHour.Split(':')[0]), Int32.Parse(o.StartHour.Split(':')[1]), 00);
+        DateTime orderEnd = new DateTime(resdate.Year, resdate.Month, resdate.Day, Int32.Parse(o.EndHour.Split(':')[0]), Int32.Parse(o.EndHour.Split(':')[1]), 00);
+        DateTime rangeStart = new DateTime(resdate.Year, resdate.Month, resdate.Day, Int32.Parse(rStart.Split(':')[0]), Int32.Parse(rStart.Split(':')[1]), 00);
+        DateTime rangeEnd = new DateTime(resdate.Year, resdate.Month, resdate.Day, Int32.Parse(rEnd.Split(':')[0]), Int32.Parse(rEnd.Split(':')[1]), 00);
+
+        //TimeSpan orderStart = new TimeSpan(Int32.Parse(o.StartHour.Split(':')[0]), Int32.Parse(o.StartHour.Split(':')[1]), 00);
+        //TimeSpan orderEnd = new TimeSpan(Int32.Parse(o.EndHour.Split(':')[0]), Int32.Parse(o.EndHour.Split(':')[1]), 00);
+        //TimeSpan rangeStart = new TimeSpan(Int32.Parse(rStart.Split(':')[0]), Int32.Parse(rStart.Split(':')[1]), 00);
+        //TimeSpan rangeEnd = new TimeSpan(Int32.Parse(rEnd.Split(':')[0]), Int32.Parse(rEnd.Split(':')[1]), 00);
+        RealAvailability ra = new RealAvailability();
+
+        List<string> avaList = new List<string>();
+        string format = "HH:mm:ss";
+        // another option maybe better List<RealAvailability> avaList = new List<RealAvailability>();
+
+        if (rangeStart.CompareTo(orderStart) == 0 && rangeEnd.CompareTo(orderEnd) == 0)
+        {
+            ra.StartTime = rangeStart.ToString(format);
+            ra.EndTime = rangeStart.ToString(format);
+
+            avaList.Add(ra.StartTime.ToString() + "-" + ra.EndTime.ToString());
+        }
+        else if (rangeStart.CompareTo(orderStart) == 0 && rangeEnd.CompareTo(orderEnd) == 1)
+        {
+            ra.StartTime = orderEnd.ToString(format);
+            ra.EndTime = rangeEnd.ToString(format);
+            avaList.Add(ra.StartTime.ToString() + "-" + ra.EndTime.ToString());
+
+        }
+        else if (rangeStart.CompareTo(orderStart) == -1 && rangeEnd.CompareTo(orderEnd) == 0)
+        {
+            ra.StartTime = rangeStart.ToString(format);
+            ra.EndTime = orderStart.ToString(format);
+            avaList.Add(ra.StartTime.ToString() + "-" + ra.EndTime.ToString());
+
+        }
+        else if(rangeStart.CompareTo(orderStart) == -1 && rangeEnd.CompareTo(orderEnd) == 1)
+        {
+            ra.StartTime = rangeStart.ToString(format);
+            ra.EndTime = orderStart.ToString(format);
+            avaList.Add(ra.StartTime.ToString() + "-" + ra.EndTime.ToString());
+            RealAvailability ra2 = new RealAvailability();
+            ra2.StartTime = orderEnd.ToString(format);
+            ra2.EndTime = rangeEnd.ToString(format);
+
+            avaList.Add(ra2.StartTime.ToString() + "-" + ra2.EndTime.ToString());
+        }
+
+        return avaList;
+    }
+
+
+
+    public List<string> readAllAvailbilities(int spaceId, string date)
+    {
+        List<string> allav = new List<string>();
+        List<string> allav2 = new List<string>();
+
+        SqlConnection con = null;
+        DateTime date2 = new DateTime();
+        if(date!=null && date!="")
+        {
+            date2 = new DateTime(Convert.ToInt32(date.Split('/')[2]), Convert.ToInt32(date.Split('/')[1]), Convert.ToInt32(date.Split('/')[0]));
+
+        }
+        
+        string format2 = "yyyy-MM-dd";
+        
+        try
+        {
+            con = connect("database");
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        try
+        {
+            string selectSTR = "SELECT * FROM RealAvailability_2020 WHERE FkSpaceId=" + spaceId.ToString() + " AND AvailabilityDate='" + date2.ToString(format2) + "'";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dr.Read())
+            {   // Read till the end of the data into a row
+                RealAvailability reAv = new RealAvailability();
+
+                reAv.Id = Convert.ToInt32(dr["Id"]);
+                reAv.Year = Convert.ToInt32(dr["Year"]);
+                reAv.WeekNumber = Convert.ToInt32(dr["WeekNumber"]);
+                reAv.Day = (string)dr["Week_Day"];
+                reAv.StartTime = dr["StartTime"].ToString(); 
+                reAv.EndTime = dr["EndTime"].ToString();
+                reAv.FkSpaceId = Convert.ToInt32(dr["FkSpaceId"]);
+
+
+                string temp = dr["AvailabilityDate"].ToString();
+                string tempdate = temp.Split(' ')[0];
+                string day = tempdate.Split('/')[0];
+                string month = tempdate.Split('/')[1];
+                string year = tempdate.Split('/')[2];
+                reAv.Date = temp;
+                reAv.Date2 = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(day));
+
+
+                allav.Add(reAv.StartTime + "-" + reAv.EndTime);
+                if (reAv.StartTime != reAv.EndTime)
+                    allav2.Add(reAv.StartTime + "-" + reAv.EndTime);
+            }
+          /*  if(allav.Count == 0)
+            {
+
+                WeekAvailability w = readWeekAvailbility2(spaceId, date2.DayOfWeek.ToString()); //to get they day eg. Sunday
+                allav.Add(w.StartTime + "-" + w.EndTime);
+            }*/
+            List<WeekAvailability> list = readWeekAvailbility(spaceId, date2.DayOfWeek.ToString());
+            bool isBetween = false;
+            foreach (WeekAvailability item in list)
+            {
+                isBetween = false;
+                for(int i=0 ; i<allav.Count ; i++)
+                {
+                    DateTime startdatereal = new DateTime(date2.Year, date2.Month, date2.Day, Int32.Parse(allav[i].Split(':')[0]), Int32.Parse(allav[i].Split(':')[1]), 0);
+                    DateTime enddatereal = new DateTime(date2.Year, date2.Month, date2.Day, Int32.Parse(allav[i].Split('-')[1].Split(':')[0]), Int32.Parse(allav[i].Split('-')[1].Split(':')[1]), 0);
+                    DateTime startdateweek = new DateTime(date2.Year, date2.Month, date2.Day, Int32.Parse(item.StartTime.Split(':')[0]), Int32.Parse(item.StartTime.Split(':')[1]), 0);
+                    DateTime enddateweek = new DateTime(date2.Year, date2.Month, date2.Day, Int32.Parse(item.EndTime.Split(':')[0]), Int32.Parse(item.EndTime.Split(':')[1]), 0);
+
+                    if (startdatereal>=startdateweek && enddatereal<=enddateweek)
+                    {
+                        isBetween = true;
+                    }
+                }
+                if(isBetween == false)
+                {
+                    allav2.Add(item.StartTime + "-" + item.EndTime);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+        return allav2;
+    }
+    public List<RealAvailability> readRealAvailbility(int spaceId, string date)
+    {
+        List<RealAvailability> ra = new List<RealAvailability>();
+        SqlConnection con = null;
+        try
+        {
+            con = connect("database");
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        try
+        {
+            string selectSTR = "SELECT * FROM RealAvailability_2020 WHERE FkSpaceId=" + spaceId.ToString() + " AND AvailabilityDate='" + date + "'";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dr.Read())
+            {   // Read till the end of the data into a row
+                RealAvailability reAv = new RealAvailability();
+
+                reAv.Id = Convert.ToInt32(dr["Id"]);
+                reAv.Year = Convert.ToInt32(dr["Year"]);
+                reAv.WeekNumber = Convert.ToInt32(dr["WeekNumber"]);
+                reAv.Day = (string)(dr["Week_Day"]);
+                reAv.StartTime = dr["StartTime"].ToString();
+                reAv.EndTime = dr["EndTime"].ToString();
+                reAv.FkSpaceId = Convert.ToInt32(dr["Year"]);
+
+                string temp = dr["AvailabilityDate"].ToString();
+                string temp2 = temp.Split(' ')[0];
+                string day = temp2.Split('/')[0];
+                string month = temp2.Split('/')[1];
+                string year = temp2.Split('/')[2];
+                reAv.Date = temp;
+                reAv.Date2 = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(day));
+
+                ra.Add(reAv);
+            }
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+        return ra;
+    }
+
+    private String BuildInsertCommand(RealAvailability r)
+    {
+        String command;
+
+        StringBuilder sb = new StringBuilder();
+        string format = "yyyy-MM-dd";
+        //DateTime time = DateTime.Now;
+        // string timeInString = DateTime.Now.ToString("YYYY-MM-DD hh:mm:ss");
+
+
+        // use a string builder to create the dynamic string
+        sb.AppendFormat("Values({0}, {1},'{2}','{3}','{4}',{5}, '{6}')", r.Year.ToString(), r.WeekNumber.ToString(), r.Day, r.StartTime, r.EndTime, r.FkSpaceId.ToString(), r.Date2.ToString(format));
+        String prefix = "INSERT INTO RealAvailability_2020 " + "([Year], [WeekNumber], [Week_Day], [StartTime], [EndTime], [FkSpaceId], [AvailabilityDate]) ";
+        command = prefix + sb.ToString();
+
+        return command;
+    }
+    //--------------------------------------------------------------------------------------------------
+    // This method inserts a order to the Orders table 
+    //--------------------------------------------------------------------------------------------------
+    public int insert(RealAvailability r)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("database"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildInsertCommand(r);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            return 0;
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+    public Country getCountryByName(string name)
+    {
+        //List<Country> countriesList = new List<Country>();
+        Country c = new Country();
+        SqlConnection con = null;
+
+        try
+        {
+            con = connect("database"); // create a connection to the database using the connection String defined in the web config file
+
+            String selectSTR = "SELECT * FROM Countries_2020 WHERE cname='" + name + "'";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+            // get a reader
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+
+
+            //while (dr.Read())
+            //{   // Read till the end of the data into a row
+            if (dr.Read())
+            {
+                c.Id = Convert.ToInt32(dr["id"]);
+                c.Name = (string)dr["cname"];
+                c.Lang = (string)dr["lang"];
+                c.Continent = (string)dr["continent"];
+                return c;
+            }
+            else
+            {
+                return null;
+            }
+
+
+
+
+            //}
+
+
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+
+    }
+
+    public List<Country> getAllCountries()
+    {
+        List<Country> countriesList = new List<Country>();
+        SqlConnection con = null;
+
+        try
+        {
+            con = connect("database"); // create a connection to the database using the connection String defined in the web config file
+
+            String selectSTR = "SELECT * FROM Countries_2020";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+            // get a reader
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+            while (dr.Read())
+            {   // Read till the end of the data into a row
+                Country c = new Country();
+
+                c.Id = Convert.ToInt32(dr["id"]);
+                c.Name = (string)dr["cname"];
+                c.Lang = (string)dr["lang"];
+                c.Continent = (string)dr["continent"];
+                countriesList.Add(c);
+            }
+
+            return countriesList;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+
+    }
+
+    public List<Country> getByContinent(string name)
+    {
+        List<Country> countriesList = new List<Country>();
+        SqlConnection con = null;
+
+        try
+        {
+            con = connect("database"); // create a connection to the database using the connection String defined in the web config file
+
+            String selectSTR = "SELECT * FROM Countries_2020 WHERE continent='" + name + "'";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+            // get a reader
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+            while (dr.Read())
+            {   // Read till the end of the data into a row
+                Country c = new Country();
+
+                c.Id = Convert.ToInt32(dr["id"]);
+                c.Name = (string)dr["cname"];
+                c.Lang = (string)dr["lang"];
+                c.Continent = (string)dr["continent"];
+                countriesList.Add(c);
+            }
+
+            return countriesList;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+
+    }
+    public DBServices readCountries()
+    {
+        SqlConnection con = null;
+        try
+        {
+            con = connect("database");
+            da = new SqlDataAdapter("select * from Countries_2020", con);
+            SqlCommandBuilder builder = new SqlCommandBuilder(da);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            dt = ds.Tables[0];
+        }
+
+        catch (Exception ex)
+        {
+            // write errors to log file
+            // try to handle the error
+            throw ex;
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+        }
+
+        return this;
+
+    }
+
+    public void update()
+    {
+        da.Update(dt);
+    }
+    //--------------------------------------------------------------------------------------------------
+    // This method inserts a order to the WeekAvailability table 
+    //--------------------------------------------------------------------------------------------------
+    public List<WeekAvailability> readWeekAvailbilitiesById(int id)
+    {
+        List<WeekAvailability> list = new List<WeekAvailability>();
+        SqlConnection con = null;
+        try
+        {
+            con = connect("database");
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        try
+        {
+            string selectSTR = "select * from[dbo].[WeekAvailablity_2020] Where [FkSpaceId] =" + id.ToString() + " Order by[Day], [StartTime]";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dr.Read())
+            {   // Read till the end of the data into a row
+                WeekAvailability wa = new WeekAvailability();
+
+                wa.Id = Convert.ToInt32(dr["Id"]);
+                wa.Day = (string)dr["Day"];
+                wa.StartTime = dr["StartTime"].ToString();
+                wa.EndTime = dr["EndTime"].ToString();
+                wa.FkSpaceId = Convert.ToInt32(dr["FkSpaceId"]);
+
+                list.Add(wa);
+            }
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+        return list;
+    }
+    public List<WeekAvailability> readWeekAvailbilities()
+    {
+        List<WeekAvailability> list = new List<WeekAvailability>();
+        SqlConnection con = null;
+        try
+        {
+            con = connect("database");
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        try
+        {
+            string selectSTR = "SELECT * FROM WeekAvailablity_2020";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dr.Read())
+            {   // Read till the end of the data into a row
+                WeekAvailability wa = new WeekAvailability();
+
+                wa.Id = Convert.ToInt32(dr["Id"]);
+                wa.Day = (string)dr["Day"];
+                wa.StartTime = dr["StartTime"].ToString();
+                wa.EndTime = dr["EndTime"].ToString();
+                wa.FkSpaceId = Convert.ToInt32(dr["FkSpaceId"]);
+
+                list.Add(wa);
+            }
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+        return list;
+    }
+
+
+    //list of Availbilitie of Specific day like sunday 16:00-18:00 and 22:00-23:00  
+    public List<WeekAvailability> readWeekAvailbility(int spaceId, string day)
+    {
+        List<WeekAvailability> list = new List<WeekAvailability>();
+        SqlConnection con = null;
+        try
+        {
+            con = connect("database");
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        try
+        {
+
+            StringBuilder sb = new StringBuilder();
+
+            // use a string builder to create the dynamic string
+            sb.AppendFormat("WHERE FkSpaceId={0} AND Day='{1}'", spaceId.ToString(), day);
+
+
+            string selectSTR = "SELECT * FROM WeekAvailablity_2020 " + sb;
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dr.Read())
+            {   // Read till the end of the data into a row
+                WeekAvailability wa = new WeekAvailability();
+
+                wa.Id = Convert.ToInt32(dr["Id"]);
+                wa.Day = (string)dr["Day"];
+                wa.StartTime = dr["StartTime"].ToString();
+                wa.EndTime = dr["EndTime"].ToString();
+                wa.FkSpaceId = Convert.ToInt32(dr["FkSpaceId"]);
+                list.Add(wa);
+            }
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+        return list;
+    }
+
+    // read one availabiliy per day of specific day (there should be antother function for list of availabilities per day)
+    public WeekAvailability readWeekAvailbility2(int spaceId, string day)
+    {
+        WeekAvailability wa = new WeekAvailability();
+        SqlConnection con = null;
+        try
+        {
+            con = connect("database");
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+        try
+        {
+
+            StringBuilder sb = new StringBuilder();
+
+            // use a string builder to create the dynamic string
+            sb.AppendFormat("WHERE FkSpaceId={0} AND Day='{1}'", spaceId.ToString(), day);
+
+
+            string selectSTR = "SELECT * FROM WeekAvailablity_2020 " + sb;
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            while (dr.Read())
+            {   // Read till the end of the data into a row
+
+                wa.Id = Convert.ToInt32(dr["Id"]);
+                wa.Day = (string)dr["Day"];
+                wa.StartTime = dr["StartTime"].ToString();
+                wa.EndTime = dr["EndTime"].ToString();
+                wa.FkSpaceId = Convert.ToInt32(dr["FkSpaceId"]);
+            }
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+        return wa;
+    }
+    private String BuildInsertCommand(WeekAvailability wa)
+    {
+        String command;
+
+        StringBuilder sb = new StringBuilder();
+
+        // use a string builder to create the dynamic string
+        sb.AppendFormat("Values({0}, '{1}', '{2}', '{3}', {4})", wa.Id.ToString(), wa.Day, wa.StartTime, wa.EndTime, wa.FkSpaceId.ToString());
+        String prefix = "INSERT INTO WeekAvailablity_2020 " + "([Id], [Day], [StartTime], [EndTime], [FkSpaceId]) ";
+        command = prefix + sb.ToString();
+
+        return command;
+    }
+
+    public int insert(WeekAvailability wa)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("database"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildInsertCommand(wa);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            return 0;
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+    public DBServices readRealAvailabilities()
+    {
+        SqlConnection con = null;
+        try
+        {
+            con = connect("database");
+            da = new SqlDataAdapter("select * from [RealAvailability_2020]", con);
+            SqlCommandBuilder builder = new SqlCommandBuilder(da);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            dt = ds.Tables[0];
+        }
+
+        catch (Exception ex)
+        {
+            // write errors to log file
+            // try to handle the error
+            throw ex;
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+        }
+
+        return this;
+
+    }
 
 }
+
+
